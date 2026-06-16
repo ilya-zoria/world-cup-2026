@@ -16,7 +16,12 @@ name: Publish lineups feed
 on:
   schedule:
     - cron: "*/15 * * * *"   # every 15 min; the script no-ops when nothing is in window
-  workflow_dispatch: {}       # manual trigger for testing
+  workflow_dispatch:          # manual trigger (testing / backfill)
+    inputs:
+      now:
+        description: "Override 'now' as ISO8601 (e.g. 2026-06-11T19:20:00Z); blank = real time"
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -48,13 +53,18 @@ jobs:
           mkdir -p public
           OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           REPO="${{ github.event.repository.name }}"
+          NOW_ARG=""
+          if [ -n "${{ github.event.inputs.now }}" ]; then
+            NOW_ARG="--now ${{ github.event.inputs.now }}"
+          fi
           # Read the previously published feed so lineups persist across runs
           # (15-min cadence > Pages' ~10-min CDN cache, so this is always fresh).
           python3 Tools/fetch_lineups.py \
             --matches WorldCup26/Data/matches.json \
             --teams   WorldCup26/Data/teams.json \
             --out     public/lineups.json \
-            --base-url "https://$OWNER.github.io/$REPO/lineups.json"
+            --base-url "https://$OWNER.github.io/$REPO/lineups.json" \
+            $NOW_ARG
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
