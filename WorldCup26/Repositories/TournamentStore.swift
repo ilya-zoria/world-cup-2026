@@ -43,9 +43,6 @@ final class TournamentStore {
 
     private let local: LocalDataRepositoryProtocol
     private let api: MatchAPIRepositoryProtocol
-    /// Lineups come from the static feed (not Football-Data, which gates them
-    /// behind a paid tier). `LineupFeedRepository` caches the feed internally.
-    private let lineupRepo: LineupRepositoryProtocol
 
     // MARK: Refresh throttling (tuned for the free-tier ~10 calls/min limit)
 
@@ -64,14 +61,12 @@ final class TournamentStore {
     init(
         local: LocalDataRepositoryProtocol = LocalDataRepository(),
         api: MatchAPIRepositoryProtocol = MatchAPIRepository(client: APIClient(configuration: .live)),
-        lineupRepo: LineupRepositoryProtocol = LineupFeedRepository(configuration: .live),
         liveRefreshTTL: TimeInterval = 90,
         idleRefreshTTL: TimeInterval = 5 * 60,
         minFetchInterval: TimeInterval = 15
     ) {
         self.local = local
         self.api = api
-        self.lineupRepo = lineupRepo
         self.liveRefreshTTL = liveRefreshTTL
         self.idleRefreshTTL = idleRefreshTTL
         self.minFetchInterval = minFetchInterval
@@ -302,20 +297,6 @@ final class TournamentStore {
             refreshError = nil
         } catch {
             refreshError = error.localizedDescription
-        }
-    }
-
-    // MARK: - Lineups
-
-    /// Lineups for a match, read from the static feed (cached by the repository).
-    /// Returns `.empty` when the feed isn't configured or doesn't have them yet —
-    /// the Lineups tab degrades gracefully rather than failing.
-    func lineups(for match: Match) async -> MatchLineups {
-        guard lineupRepo.isConfigured else { return .empty }
-        do {
-            return try await lineupRepo.fetchLineups(for: match)
-        } catch {
-            return .empty
         }
     }
 

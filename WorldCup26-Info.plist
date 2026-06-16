@@ -18,7 +18,5 @@
 	<string>$(SupabaseHost)</string>
 	<key>SupabaseAnonKey</key>
 	<string>$(SupabaseAnonKey)</string>
-	<key>LineupsFeedURL</key>
-	<string>$(LineupsFeedURL)</string>
 </dict>
 </plist>

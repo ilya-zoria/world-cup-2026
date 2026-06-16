@@ -18,6 +18,3 @@ Secrets.xcconfig
 
 # Football-Data fetch artifacts (raw API dumps + local JSON backups)
 Tools/cache/
-
-# Lineups feed build output (published to GitHub Pages by the Action, not committed)
-public/

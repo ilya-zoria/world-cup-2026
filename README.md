@@ -3,7 +3,7 @@
 A production-quality SwiftUI tournament explorer for the 2026 World Cup. It is an
 **offline-first, structured navigation app** (matches, teams, groups, knockout
 bracket) — not a live-score streaming product. Bundled JSON is the source of
-truth; the Football-Data API only *enriches* match state and lineups when
+truth; the Football-Data API only *enriches* match state (status/score) when
 configured.
 
 > Built for **iOS 17+ / Xcode 16+**. Uses the Observation framework
@@ -33,14 +33,12 @@ View  ──►  ViewModel (@Observable)  ──►  TournamentStore  ──► 
 ```
 
 - **Models** (`Models/`) — `Team`, `Match`, `Group`, `Stadium`, `Score`,
-  `MatchStatus`, `KnockoutRound`, `Lineup`, `Standing`, plus `MatchVote` /
+  `MatchStatus`, `KnockoutRound`, `Standing`, plus `MatchVote` /
   `MatchDaySection`.
 - **Repositories** (`Repositories/`)
   - `LocalDataRepository` — loads bundled JSON; the offline backbone.
   - `MatchAPIRepository` — fetches dynamic status/score from Football-Data;
     best-effort, never blocks the static experience.
-  - `LineupFeedRepository` — reads the static lineups feed (one cached GET serves
-    every match); see *Connecting lineups* below.
   - `TournamentStore` — `@MainActor @Observable` hub. Loads static data
     synchronously at init (instant, offline), builds indexes, computes
     standings/feed sections locally, and orchestrates API refresh + caching.
@@ -51,7 +49,7 @@ View  ──►  ViewModel (@Observable)  ──►  TournamentStore  ──► 
 - **ViewModels** (`ViewModels/`) — one per screen, derive from the store.
 - **Views** (`Views/`) — `RootView` (4-tab shell) → Home, Groups, Knockout,
   Teams; Settings and the Support link live in the Home header. Plus the core
-  `MatchDetailView` (Overview / Lineups / Stats).
+  `MatchDetailView` (Overview / Stats).
 - **Composition root** — `App/AppEnvironment.swift` builds the services once;
   `WorldCup26App` injects them into the environment.
 
@@ -131,49 +129,6 @@ Supabase backend, not seeded. Setup:
    `VoteStore.isRemoteEnabled` is `false`, and the poll degrades to a local-only
    pick (the user sees their own choice, but no cross-user counts).
 
-### Connecting lineups (via GitHub Actions)
-
-> **Heads-up: no fully-free source has complete WC2026 lineups.** Football-Data
-> free omits lineups; API-Football free has **no 2026 season** (only 2022–2024);
-> TheSportsDB free caps lineups at 5 players. Real lineups need a **paid** plan
-> (TheSportsDB Patreon ≈ cheapest; API-Football paid = most reliable). The
-> scheduled workflow is **disabled** until a working source is wired — the app
-> just shows its empty state until then. The pipeline below is provider-agnostic;
-> point `fetch_lineups.py` at whatever paid source you choose.
-
-Lineups use a **"fetch once, serve to all users"** model so the provider's
-quota (shared by one key) is never multiplied by your user count — and the API
-key never ships in the app:
-
-```
-   API-Football ──(scheduled job, a few calls per match)──► lineups.json (GitHub Pages)
-                                                                   │
-                              all app installs read this ◄── unlimited, $0 ──┘
-```
-
-- **`Tools/fetch_lineups.py`** is the central fetcher. It calls API-Football
-  *only* for matches inside their kickoff window (idle runs make **zero** calls),
-  maps fixtures to local match ids by date + team name, and writes a
-  `lineups.json` that decodes straight into `MatchLineups`. Per-match calls are
-  capped (`MAX_ATTEMPTS`) so a busy 12-match day stays well under 100/day.
-- **`.github/workflows/lineups.yml`** runs it every 15 min and publishes the
-  feed to GitHub Pages.
-
-Setup:
-1. Free key at <https://www.api-football.com> → repo **Settings → Secrets and
-   variables → Actions** → add `API_FOOTBALL_KEY`.
-2. Repo **Settings → Pages → Source = "GitHub Actions"**.
-3. In `Secrets.xcconfig`, set `LineupsFeedURL` to the published path **without a
-   scheme** (xcconfig treats `//` as a comment; Swift prepends `https://`):
-   ```
-   LineupsFeedURL = <owner>.github.io/<repo>/lineups.json
-   ```
-4. Verify the World Cup league id (`--league`, default `1`) via API-Football's
-   `/leagues?search=world cup` if a run reports no fixtures matched.
-
-Without `LineupsFeedURL` the feature is off and the Lineups tab shows its empty
-state — the app stays fully functional.
-
 ---
 
 ## Monetization
@@ -213,11 +168,10 @@ re-localizes live without a restart. On-screen text uses `Text(LKey(...))`
 - **Knockout pairings**: bracket placeholders ("Winner Group A" …) are the local
   scaffolding, not yet the verified official 2026 bracket; teams fill in live as
   the group stage resolves.
-- Lineups come from a free **API-Football** feed published by a scheduled
-  GitHub Action (see *Connecting lineups* above), not Football-Data (which gates
-  them behind a paid tier). They only exist from ~40 min before kickoff onward;
-  before that, and when the feed isn't configured, the Lineups tab shows its
-  empty state. Detailed match stats still need a paid tier.
+- **Lineups were intentionally removed.** No fully-free data source has complete
+  WC2026 lineups (Football-Data free omits them; API-Football free has no 2026
+  season; TheSportsDB free caps at 5 players). Match detail shows Overview / Stats
+  only. To add lineups back, a paid data plan would be needed.
 - Add a real `AppIcon` before release.
 - The "Who will win?" poll needs a Supabase project to show global tallies (see
   *Connecting Supabase* above); until it's configured, votes stay local-only.

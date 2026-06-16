@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// The core screen: a scoreboard header plus Overview / Lineups / Stats tabs.
+/// The core screen: a scoreboard header plus Overview / Stats tabs.
 struct MatchDetailView: View {
     @State private var model: MatchDetailViewModel
 
@@ -17,11 +17,6 @@ struct MatchDetailView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .task(id: model.selectedTab) {
-            if model.selectedTab == .lineups {
-                await model.loadLineupsIfNeeded()
-            }
-        }
     }
 
     private var homeColors: [Color] { FlagPalette.colors(for: model.homeTeam?.displayFlag ?? "") }
@@ -44,7 +39,6 @@ struct MatchDetailView: View {
 
                     switch model.selectedTab {
                     case .overview: OverviewTab(model: model)
-                    case .lineups: LineupsTab(model: model)
                     case .stats: StatsTab(model: model)
                     }
                 }

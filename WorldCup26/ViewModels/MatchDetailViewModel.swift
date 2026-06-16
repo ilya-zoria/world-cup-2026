@@ -1,16 +1,15 @@
 import Foundation
 import Observation
 
-/// Drives the Match Detail screen and its three tabs (Overview, Lineups, Stats).
+/// Drives the Match Detail screen and its tabs (Overview, Stats).
 @MainActor
 @Observable
 final class MatchDetailViewModel {
     enum Tab: Hashable, CaseIterable {
-        case overview, lineups, stats
+        case overview, stats
         var titleKey: String {
             switch self {
             case .overview: return "match.tab.overview"
-            case .lineups: return "match.tab.lineups"
             case .stats: return "match.tab.stats"
             }
         }
@@ -21,9 +20,6 @@ final class MatchDetailViewModel {
     private let votes: VoteStore
 
     var selectedTab: Tab = .overview
-    var lineups: MatchLineups = .empty
-    var isLoadingLineups = false
-    private var didLoadLineups = false
     private(set) var isLoadingVotes = false
 
     init(matchId: String, store: TournamentStore, votes: VoteStore) {
@@ -85,18 +81,4 @@ final class MatchDetailViewModel {
     func castVote(_ choice: MatchVote.Choice) async {
         await votes.castVote(choice, forMatch: matchId)
     }
-
-    // MARK: Lineups
-
-    var lineupsAvailable: Bool { !lineups.isEmpty }
-
-    func loadLineupsIfNeeded() async {
-        guard !didLoadLineups, let match else { return }
-        didLoadLineups = true
-        isLoadingLineups = true
-        defer { isLoadingLineups = false }
-        lineups = await store.lineups(for: match)
-    }
-
-    func team(_ id: String?) -> Team? { store.team(id: id) }
 }

@@ -25,27 +25,6 @@ enum FootballDataDTO {
         let home: Int?
         let away: Int?
     }
-
-    // MARK: Lineups (single-match endpoint)
-
-    struct MatchDetailDTO: Decodable {
-        let id: Int
-        let homeTeam: TeamLineupDTO?
-        let awayTeam: TeamLineupDTO?
-    }
-
-    struct TeamLineupDTO: Decodable {
-        let formation: String?
-        let lineup: [PlayerDTO]?
-        let bench: [PlayerDTO]?
-    }
-
-    struct PlayerDTO: Decodable {
-        let id: Int
-        let name: String
-        let position: String?
-        let shirtNumber: Int?
-    }
 }
 
 // MARK: - Mapping to domain models
@@ -64,22 +43,6 @@ extension FootballDataDTO.MatchDTO {
             status: MatchStatus(apiStatus: status),
             score: domainScore
         )
-    }
-}
-
-extension FootballDataDTO.TeamLineupDTO {
-    func toDomain() -> TeamLineup {
-        TeamLineup(
-            formation: formation,
-            startingXI: (lineup ?? []).map { $0.toDomain() },
-            bench: (bench ?? []).map { $0.toDomain() }
-        )
-    }
-}
-
-extension FootballDataDTO.PlayerDTO {
-    func toDomain() -> Player {
-        Player(id: id, name: name, position: position, shirtNumber: shirtNumber)
     }
 }
 
