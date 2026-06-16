@@ -1,0 +1,64 @@
+name: Publish lineups feed
+
+# Central "fetch once, serve to all users" job. Runs on a schedule, calls
+# API-Football only for matches inside their kickoff window (idle runs make
+# ZERO API calls), and publishes lineups.json to GitHub Pages. Every app install
+# reads that static file for free — so the 100-requests/day free tier is shared
+# by this one job, not multiplied by every user.
+#
+# One-time setup:
+#   1. Repo Settings → Secrets and variables → Actions → add secret
+#      API_FOOTBALL_KEY  (free key from https://www.api-football.com).
+#   2. Repo Settings → Pages → Source = "GitHub Actions".
+#   3. Point the app's LineupsFeedURL at:
+#      https://<owner>.github.io/<repo>/lineups.json   (lowercase owner)
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"   # every 15 min; the script no-ops when nothing is in window
+  workflow_dispatch: {}       # manual trigger for testing
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Don't overlap runs; let an in-flight publish finish.
+concurrency:
+  group: lineups-pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Build lineups feed
+        env:
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+        run: |
+          mkdir -p public
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          REPO="${{ github.event.repository.name }}"
+          # Read the previously published feed so lineups persist across runs
+          # (15-min cadence > Pages' ~10-min CDN cache, so this is always fresh).
+          python3 Tools/fetch_lineups.py \
+            --matches WorldCup26/Data/matches.json \
+            --teams   WorldCup26/Data/teams.json \
+            --out     public/lineups.json \
+            --base-url "https://$OWNER.github.io/$REPO/lineups.json"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+      - id: deploy
+        uses: actions/deploy-pages@v4
