@@ -1,0 +1,114 @@
+[
+  {
+    "id": "atlanta",
+    "name": "Mercedes-Benz Stadium",
+    "city": "Atlanta",
+    "country": "USA",
+    "capacity": 71000
+  },
+  {
+    "id": "boston",
+    "name": "Gillette Stadium",
+    "city": "Foxborough",
+    "country": "USA",
+    "capacity": 65000
+  },
+  {
+    "id": "dallas",
+    "name": "AT&T Stadium",
+    "city": "Arlington",
+    "country": "USA",
+    "capacity": 80000
+  },
+  {
+    "id": "houston",
+    "name": "NRG Stadium",
+    "city": "Houston",
+    "country": "USA",
+    "capacity": 72000
+  },
+  {
+    "id": "kansascity",
+    "name": "Arrowhead Stadium",
+    "city": "Kansas City",
+    "country": "USA",
+    "capacity": 76000
+  },
+  {
+    "id": "losangeles",
+    "name": "SoFi Stadium",
+    "city": "Inglewood",
+    "country": "USA",
+    "capacity": 70000
+  },
+  {
+    "id": "miami",
+    "name": "Hard Rock Stadium",
+    "city": "Miami Gardens",
+    "country": "USA",
+    "capacity": 65000
+  },
+  {
+    "id": "newyork",
+    "name": "MetLife Stadium",
+    "city": "East Rutherford",
+    "country": "USA",
+    "capacity": 82500
+  },
+  {
+    "id": "philadelphia",
+    "name": "Lincoln Financial Field",
+    "city": "Philadelphia",
+    "country": "USA",
+    "capacity": 69000
+  },
+  {
+    "id": "sfbay",
+    "name": "Levi's Stadium",
+    "city": "Santa Clara",
+    "country": "USA",
+    "capacity": 68500
+  },
+  {
+    "id": "seattle",
+    "name": "Lumen Field",
+    "city": "Seattle",
+    "country": "USA",
+    "capacity": 69000
+  },
+  {
+    "id": "toronto",
+    "name": "BMO Field",
+    "city": "Toronto",
+    "country": "Canada",
+    "capacity": 45000
+  },
+  {
+    "id": "vancouver",
+    "name": "BC Place",
+    "city": "Vancouver",
+    "country": "Canada",
+    "capacity": 54500
+  },
+  {
+    "id": "guadalajara",
+    "name": "Estadio Akron",
+    "city": "Guadalajara",
+    "country": "Mexico",
+    "capacity": 48000
+  },
+  {
+    "id": "mexicocity",
+    "name": "Estadio Azteca",
+    "city": "Mexico City",
+    "country": "Mexico",
+    "capacity": 83000
+  },
+  {
+    "id": "monterrey",
+    "name": "Estadio BBVA",
+    "city": "Monterrey",
+    "country": "Mexico",
+    "capacity": 53500
+  }
+]

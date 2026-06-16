@@ -1,0 +1,16 @@
+// Base build configuration (committed).
+//
+// Pulls secrets (Football-Data API key, Supabase host + anon key) out of the
+// gitignored Secrets.xcconfig and injects them into the auto-generated
+// Info.plist. The `?` makes the include optional, so the project still builds
+// for anyone without a Secrets.xcconfig (the app simply stays offline-only —
+// APIConfiguration.isConfigured == false and VoteConfiguration.isConfigured ==
+// false, so the "Who will win?" poll degrades to a local-only pick).
+#include? "Secrets.xcconfig"
+
+// Custom Info.plist keys (like FootballDataAPIKey) are NOT honored via
+// INFOPLIST_KEY_* — Xcode only generates a fixed allowlist of those. Instead we
+// point at a partial Info.plist carrying just our custom key; GENERATE_INFOPLIST_FILE
+// (still YES) merges all the standard keys on top. $(FootballDataAPIKey) inside
+// that file is expanded from the build setting above.
+INFOPLIST_FILE = WorldCup26-Info.plist

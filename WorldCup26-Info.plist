@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Partial Info.plist for custom keys only. The standard keys (display name,
+  scene manifest, launch screen, orientations) are still produced by
+  GENERATE_INFOPLIST_FILE = YES and merged on top of this file at build time.
+
+  FootballDataAPIKey is substituted from the build setting of the same name,
+  which Config.xcconfig pulls from the gitignored Secrets.xcconfig. When no key
+  is configured it expands to an empty string and APIConfiguration.isConfigured
+  becomes false (app stays offline-only).
+-->
+<plist version="1.0">
+<dict>
+	<key>FootballDataAPIKey</key>
+	<string>$(FootballDataAPIKey)</string>
+	<key>SupabaseHost</key>
+	<string>$(SupabaseHost)</string>
+	<key>SupabaseAnonKey</key>
+	<string>$(SupabaseAnonKey)</string>
+	<key>LineupsFeedURL</key>
+	<string>$(LineupsFeedURL)</string>
+</dict>
+</plist>

@@ -1,0 +1,122 @@
+[
+  {
+    "id": "A",
+    "name": "Group A",
+    "teamIds": [
+      "CZE",
+      "KOR",
+      "MEX",
+      "RSA"
+    ]
+  },
+  {
+    "id": "B",
+    "name": "Group B",
+    "teamIds": [
+      "BIH",
+      "CAN",
+      "QAT",
+      "SUI"
+    ]
+  },
+  {
+    "id": "C",
+    "name": "Group C",
+    "teamIds": [
+      "BRA",
+      "HAI",
+      "MAR",
+      "SCO"
+    ]
+  },
+  {
+    "id": "D",
+    "name": "Group D",
+    "teamIds": [
+      "AUS",
+      "PAR",
+      "TUR",
+      "USA"
+    ]
+  },
+  {
+    "id": "E",
+    "name": "Group E",
+    "teamIds": [
+      "CIV",
+      "CUW",
+      "ECU",
+      "GER"
+    ]
+  },
+  {
+    "id": "F",
+    "name": "Group F",
+    "teamIds": [
+      "JPN",
+      "NED",
+      "SWE",
+      "TUN"
+    ]
+  },
+  {
+    "id": "G",
+    "name": "Group G",
+    "teamIds": [
+      "BEL",
+      "EGY",
+      "IRN",
+      "NZL"
+    ]
+  },
+  {
+    "id": "H",
+    "name": "Group H",
+    "teamIds": [
+      "CPV",
+      "ESP",
+      "KSA",
+      "URY"
+    ]
+  },
+  {
+    "id": "I",
+    "name": "Group I",
+    "teamIds": [
+      "FRA",
+      "IRQ",
+      "NOR",
+      "SEN"
+    ]
+  },
+  {
+    "id": "J",
+    "name": "Group J",
+    "teamIds": [
+      "ALG",
+      "ARG",
+      "AUT",
+      "JOR"
+    ]
+  },
+  {
+    "id": "K",
+    "name": "Group K",
+    "teamIds": [
+      "COD",
+      "COL",
+      "POR",
+      "UZB"
+    ]
+  },
+  {
+    "id": "L",
+    "name": "Group L",
+    "teamIds": [
+      "CRO",
+      "ENG",
+      "GHA",
+      "PAN"
+    ]
+  }
+]
