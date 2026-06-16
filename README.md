@@ -131,11 +131,19 @@ Supabase backend, not seeded. Setup:
    `VoteStore.isRemoteEnabled` is `false`, and the poll degrades to a local-only
    pick (the user sees their own choice, but no cross-user counts).
 
-### Connecting lineups (API-Football, via GitHub Actions)
+### Connecting lineups (via GitHub Actions)
 
-Lineups use a **"fetch once, serve to all users"** model so the provider's free
-quota (100 requests/day, shared by one key) is never multiplied by your user
-count — and the API key never ships in the app:
+> **Heads-up: no fully-free source has complete WC2026 lineups.** Football-Data
+> free omits lineups; API-Football free has **no 2026 season** (only 2022–2024);
+> TheSportsDB free caps lineups at 5 players. Real lineups need a **paid** plan
+> (TheSportsDB Patreon ≈ cheapest; API-Football paid = most reliable). The
+> scheduled workflow is **disabled** until a working source is wired — the app
+> just shows its empty state until then. The pipeline below is provider-agnostic;
+> point `fetch_lineups.py` at whatever paid source you choose.
+
+Lineups use a **"fetch once, serve to all users"** model so the provider's
+quota (shared by one key) is never multiplied by your user count — and the API
+key never ships in the app:
 
 ```
    API-Football ──(scheduled job, a few calls per match)──► lineups.json (GitHub Pages)
